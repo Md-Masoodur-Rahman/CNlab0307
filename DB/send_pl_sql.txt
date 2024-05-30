@@ -1,0 +1,30 @@
+SET SERVEROUTPUT ON
+
+DECLARE
+	Account NUMBER(6,2);
+	Warning VARCHAR2(20);
+BEGIN
+	Warning:='Minimum Amount Alert';
+	Account:= &Account;
+	
+	IF Account < 1001 THEN
+		dbms_output.put_line(Warning);
+		Account:=Account-100;
+		dbms_output.put_line(Account);
+	ELSE
+		dbms_output.put_line(Account);
+	END IF;
+END;
+/	
+
+
+SET SERVEROUTPUT ON
+
+BEGIN
+	FOR PERSON IN (SELECT * FROM Salesperson WHERE ROWNUM <= 5 ORDER BY COMM) LOOP
+		dbms_output.put_line(SUBSTR(PERSON.SNAME,1,3));
+	END LOOP;
+	
+END;
+
+/

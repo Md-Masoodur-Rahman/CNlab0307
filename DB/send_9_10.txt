@@ -1,0 +1,46 @@
+1. 
+CREATE OR REPLACE TRIGGER display_comm_changes 
+BEFORE DELETE OR INSERT OR UPDATE ON Salesperson
+FOR EACH ROW 
+DECLARE 
+   sal_diff number; 
+BEGIN 
+   sal_diff := :NEW.COMM  - :OLD.COMM;
+   dbms_output.put_line('Old salary: ' || :OLD.COMM); 
+   dbms_output.put_line('New salary: ' || :NEW.COMM); 
+   dbms_output.put_line('Salary difference: ' || sal_diff); 
+END;
+/ 
+
+2.
+CREATE OR REPLACE TRIGGER fine_perk
+BEFORE DELETE OR INSERT OR UPDATE ON Salesperson
+FOR EACH ROW
+DECLARE
+    sal_diff NUMBER;
+BEGIN
+    IF INSERTING THEN
+        -- Handle insert operation
+        IF :NEW.COMM > 15 THEN
+            :NEW.COMM := :NEW.COMM - 3;
+        END IF;
+
+        dbms_output.put_line('New salary: ' || :NEW.COMM);
+        
+    ELSIF UPDATING THEN
+        -- Handle update operation
+        IF :OLD.COMM > 15 THEN
+            sal_diff := :OLD.COMM - 3;
+            :NEW.COMM := sal_diff;
+            dbms_output.put_line('Old salary: ' || :OLD.COMM);
+            dbms_output.put_line('New salary: ' || sal_diff);
+        END IF;
+        
+    ELSIF DELETING THEN
+        -- Handle delete operation
+        dbms_output.put_line('Deleted salary: ' || :OLD.COMM);
+    END IF;
+END;
+/
+
+
